@@ -14,17 +14,29 @@ const app = express();
 // Create HTTP server (needed for Socket.IO)
 const server = http.createServer(app);
 
+// Allowed origins
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://collaborative-annotation-system.vercel.app'
+];
+
 // Create Socket.IO server
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:5173',
+    origin: allowedOrigins,
     methods: ['GET', 'POST', 'DELETE']
   }
 });
 
 connectDB();
 
-app.use(cors());
+// CORS for Express
+app.use(cors({
+  origin: allowedOrigins,
+  methods: ['GET', 'POST', 'DELETE', 'PUT'],
+  credentials: true
+}));
+
 app.use(express.json());
 
 // Make io available in controllers
